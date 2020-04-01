@@ -10,6 +10,137 @@ yum-config-manager —add-repo https://download.docker.com/linux/centos/docker-c
 
 yum install docker-ce docker-ce-cli containerd.io
 
-# Run icinga2
+systemctl enable docker
 
-sudo docker run -ti -p 3081:80 -v /usr/share/icingaweb2 /etc/icingaweb2 icinga/icinga2
+systemctl start docker
+
+# docker-compose install
+
+curl -L "https://github.com/docker/compose/releases/download/1.25.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+chmod +x /usr/local/bin/docker-compose
+
+docker-compose --version
+
+# pull jordan/icinga2
+
+docker pull jordan/icinga2
+
+# Run test
+
+docker run -p 80:80 -h icinga2 -t jordan/icinga2:latest
+
+
+# icinga2 web
+default auth (icingaadmin : icinga)
+localhost
+
+# Using nrpe plugin
+
+# Install nrpe (host1)
+
+yum install -y gcc glibc glibc-common openssl openssl-devel perl wget
+
+cd /tmp
+
+wget --no-check-certificate -O nrpe.tar.gz https://github.com/NagiosEnterprises/nrpe/archive/nrpe-3.2.1.tar.gz
+
+tar xzf nrpe.tar.gz
+
+cd /tmp/nrpe-nrpe-3.2.1/
+
+./configure --enable-command-args
+
+make all
+
+make install-groups-users
+
+make install
+
+make install-config
+
+firewall-cmd --zone=public --add-port=5666/tcp
+
+firewall-cmd --zone=public --add-port=5666/tcp --permanent
+
+# nrpe configuration
+
+sed -i '/^allowed_hosts=/s/$/,10.254.1.110/'/usr/local/nagios/etc/nrpe.cfg 
+
+sed -i 's / ^ dont_blame_nrpe =. * / dont_blame_nrpe = 1 / g'/ usr / local / nagios / etc / nrpe.cfg
+
+# Install nagios plugin 
+
+cd /tmp
+
+wget --no-check-certificate -O nagios-plugins.tar.gz https://github.com/nagios-plugins/nagios-plugins/archive/release-2.2.1.tar.gz
+
+tar zxf nagios-plugins.tar.gz
+
+cd /tmp/nagios-plugins-release-2.2.1/
+
+./tools/setup
+
+./configure
+
+make
+
+make install
+
+# run nrpe
+cd /usr/local/nagios/bin
+./nrpe -c ../etc/nrpe.cfg -d
+
+cd /usr/local/nagios/libexec
+ ./check_nrpe -H 127.0.0.1
+ 
+NRPE v3.2.1
+
+./check_nrpe -H 127.0.0.1 -c check_sda1
+DISK OK - free space: /boot 834 MB (82.33% inode=100%);| /boot=179MB;811;912;0;1014
+
+
+# icinga2 configuration
+
+docker exec -it  [CONTAINER ID] /bin/bash
+
+icinga2# apt-get update
+
+icinga2# apt-get install vim
+
+# nrpe command registry
+
+# new host
+icinga2# vi /etc/icinga2/conf.d/kstack.cfg
+object Host  "kstack"{
+  import "generic-host"
+  address = "10.254.1.159"
+  vars.os = "Linux"
+}
+
+# new service
+object Service "nrpe-load"{
+  import "generic-service"
+  
+  host_name = "kstack"
+  
+  check_command = "nrpe"
+  vars.nrpe_command = "check_load"
+}
+
+# reload icinga2
+
+service icinga2 restart
+
+# docker-compose
+
+git clone https://github.com/jjethwa/icinga2.git
+
+cd icinga2
+
+echo "MYSQL_ROOT_PASSWORD=<password>" > secrets_sql.env
+  
+docker-compose up
+
+
+
