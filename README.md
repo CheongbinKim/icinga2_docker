@@ -132,15 +132,5 @@ object Service "nrpe-load"{
 
 service icinga2 restart
 
-# docker-compose
-
-git clone https://github.com/jjethwa/icinga2.git
-
-cd icinga2
-
-echo "MYSQL_ROOT_PASSWORD=<password>" > secrets_sql.env
-  
-docker-compose up
-
 
 
