@@ -1,18 +1,18 @@
-# icinga2_docker
+# icinga2_docker + nrpe + nagios plugins
 
-# CentOS 7.7
+> CentOS 7.7
 
 # Install Docker
 
-yum install -y yum-utils device-mapper-persistent-data lvm2
+> yum install -y yum-utils device-mapper-persistent-data lvm2
 
-yum-config-manager —add-repo https://download.docker.com/linux/centos/docker-ce.repo
+> yum-config-manager —add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
-yum install docker-ce docker-ce-cli containerd.io
+> yum install docker-ce docker-ce-cli containerd.io
 
-systemctl enable docker
+> systemctl enable docker
 
-systemctl start docker
+> systemctl start docker
 
 # docker-compose install
 
