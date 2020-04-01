@@ -102,7 +102,7 @@ default auth (icingaadmin : icinga)
 
 ## nrpe command registry
 
-## new host
+## add host
 <pre>
 <code>
 icinga2# vi /etc/icinga2/conf.d/kstack.cfg
@@ -115,7 +115,7 @@ object Host  "kstack"{
 </pre>
 
 
-## new service
+## add service
 <pre>
 <code>
 object Service "nrpe-load"{
