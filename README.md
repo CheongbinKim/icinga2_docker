@@ -1,8 +1,8 @@
 # icinga2_docker + nrpe + nagios plugins
 
-> CentOS 7.7
+> CentOS 7.7, server(10.254.1.110), kstack(10.254.1.159)
 
-# Install Docker
+# Install Docker (server)
 
 > yum install -y yum-utils device-mapper-persistent-data lvm2
 
@@ -15,22 +15,22 @@
 > systemctl start docker
 
 
-# pull jordan/icinga2
+## pull jordan/icinga2
 
 > docker pull jordan/icinga2
 
-# Run test
+## Run test
 
 > docker run -p 80:80 -h icinga2 -t jordan/icinga2:latest
 
 
-# icinga2 web
+## icinga2 web
 default auth (icingaadmin : icinga)
 > localhost
 
-# Using nrpe plugin
+# Using nrpe (kstack)
 
-# Install nrpe (host1)
+## Install nrpe 
 
 > yum install -y gcc glibc glibc-common openssl openssl-devel perl wget
 
@@ -56,13 +56,13 @@ default auth (icingaadmin : icinga)
 
 > firewall-cmd --zone=public --add-port=5666/tcp --permanent
 
-# nrpe configuration
+## nrpe configuration
 
 > sed -i '/^allowed_hosts=/s/$/,10.254.1.110/'/usr/local/nagios/etc/nrpe.cfg 
 
 > sed -i 's / ^ dont_blame_nrpe =. * / dont_blame_nrpe = 1 / g'/ usr / local / nagios / etc / nrpe.cfg
 
-# Install nagios plugin 
+## Install nagios plugin 
 
 > cd /tmp
 
@@ -80,7 +80,7 @@ default auth (icingaadmin : icinga)
 
 > make install
 
-# start nrpe
+## start nrpe
 > cd /usr/local/nagios/bin
 > ./nrpe -c ../etc/nrpe.cfg -d
 
@@ -92,7 +92,7 @@ default auth (icingaadmin : icinga)
 > DISK OK - free space: /boot 834 MB (82.33% inode=100%);| /boot=179MB;811;912;0;1014
 
 
-# icinga2 configuration
+# icinga2 configuration (server)
 
 > docker exec -it  [CONTAINER ID] /bin/bash
 
