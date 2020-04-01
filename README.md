@@ -1,6 +1,10 @@
 # icinga2_docker + nrpe + nagios plugins
 
 > CentOS 7.7, server(10.254.1.110), kstack(10.254.1.159)
+> Docker, https://docs.docker.com/install/linux/docker-ce/centos/
+> Docker icinga2, https://hub.docker.com/r/jordan/icinga2/
+> icinga2 reference, https://icinga.com/docs/icinga2/latest/
+> Nagios plugins, https://support.nagios.com/kb/article/nagios-plugins-installing-nagios-plugins-from-source-569.html#CentOS
 
 # Install Docker (server)
 
