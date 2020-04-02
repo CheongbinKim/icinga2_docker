@@ -113,7 +113,7 @@ default auth (icingaadmin : icinga)
 ## add host
 <pre>
 <code>
-icinga2# vi /etc/icinga2/conf.d/kstack.cfg
+icinga2# vi /etc/icinga2/conf.d/kstack.conf
 object Host  "kstack"{
   import "generic-host"
   address = "10.254.1.159"
@@ -126,6 +126,7 @@ object Host  "kstack"{
 ## add service
 <pre>
 <code>
+icinga2# vi /etc/icinga2/conf.d/serices.conf
 object Service "nrpe-load"{
   import "generic-service"
   
